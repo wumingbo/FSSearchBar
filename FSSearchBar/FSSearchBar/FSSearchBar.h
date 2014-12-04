@@ -33,6 +33,11 @@
 @property (strong, nonatomic) UIImage *searchIcon;
 
 /**
+ *  The color of the textfield background color.
+ */
+@property (strong, nonatomic) UIColor *textfieldBackgroundColor;
+
+/**
  *  View's tintColor.
  */
 @property (strong, nonatomic) UIColor *tintColor;

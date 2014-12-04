@@ -18,7 +18,7 @@
 #define kTextfieldBackgroundFrame CGRectMake(15, 8, self.bounds.size.width - 30, kSearchBarHeight - 16)
 #define kTextfieldFrame CGRectMake(20, 8, [self placeholderWidth] + self.iconView.bounds.size.width, kSearchBarHeight - 16)
 #define kCancelButtonFrame CGRectMake(self.bounds.size.width - 50, 8, 50, 34)
-#define kBottomLineFrame CGRectMake(0, kSearchBarHeight - 0.5, self.bounds.size.width, 1)
+#define kBottomLineFrame CGRectMake(0, kSearchBarHeight - 0.5, self.bounds.size.width, 0.5)
 #define kIconViewFrame CGRectMake(0, 0, 20, 20)
 
 #define kTextfieldMaxWidth self.textfieldBackgroundView.bounds.size.width - 10
@@ -104,6 +104,19 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     _placeholder = placeholder;
     
     self.textfield.placeholder = _placeholder;
+    
+    
+    if (![self.textfield isFirstResponder] && self.textfield.text.length == 0) {
+        self.textfield.frame = kTextfieldFrame;
+        self.textfield.center = self.textfieldBackgroundView.center;
+    }
+}
+
+- (void)setTextfieldBackgroundColor:(UIColor *)textfieldBackgroundColor {
+    _textfieldBackgroundColor = textfieldBackgroundColor;
+    
+    self.textfieldBackgroundView.backgroundColor = textfieldBackgroundColor;
+
 }
 
 - (void)setTintColor:(UIColor *)tintColor {
@@ -266,6 +279,8 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 }
 
 - (void)didTextChange:(UITextField *)textfield {
+    _text = textfield.text;
+    
     if ([self.delegate respondsToSelector:@selector(FSSearchBar:textDidChange:)]) {
         [self.delegate FSSearchBar:self textDidChange:textfield.text];
     }
@@ -275,6 +290,8 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     
     if ([self.delegate respondsToSelector:@selector(FSSearchBarCancelButtonClicked:)]) {
         [self.delegate FSSearchBarCancelButtonClicked:self];
+        
+        return;
     }
     
     [self.textfield resignFirstResponder];
@@ -312,8 +329,13 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     [self textFieldForEditing];
     
     if ([self.delegate respondsToSelector:@selector(FSSearchBarShouldBeginEditing:)]) {
+        if ([self.delegate FSSearchBarShouldBeginEditing:self]) {
+            [self textFieldForEditing];
+        }
         return [self.delegate FSSearchBarShouldBeginEditing:self];
     }
+    
+    [self textFieldForEditing];
     
     return YES;
 }
