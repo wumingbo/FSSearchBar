@@ -17,7 +17,7 @@
 
 #define kTextfieldBackgroundFrame CGRectMake(15, 8, self.bounds.size.width - 30, kSearchBarHeight - 16)
 #define kTextfieldFrame CGRectMake(20, 8, [self placeholderWidth] + self.iconView.bounds.size.width, kSearchBarHeight - 16)
-#define kCancelButtonFrame CGRectMake(self.bounds.size.width - 50, 8, 50, 34)
+#define kCancelButtonFrame CGRectMake(self.bounds.size.width - 60, 8, 60, 34)
 #define kBottomLineFrame CGRectMake(0, kSearchBarHeight - 0.5, self.bounds.size.width, 0.5)
 #define kIconViewFrame CGRectMake(0, 0, 20, 20)
 
@@ -143,8 +143,8 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     if (animated) {
         if (showCancelButton && !self.isCancelButtonShow) {
             [UIView beginAnimations:@"ShowCancelButton" context:nil];
-            self.textfield.frame = CGRectMake(self.textfield.frame.origin.x, self.textfield.frame.origin.y, self.textfield.frame.size.width - 35, kSearchBarHeight - 16);
-            self.textfieldBackgroundView.frame = CGRectMake(self.textfieldBackgroundView.frame.origin.x, self.textfieldBackgroundView.frame.origin.y, self.textfieldBackgroundView.frame.size.width - 35, self.textfieldBackgroundView.frame.size.height);
+            self.textfield.frame = CGRectMake(self.textfield.frame.origin.x, self.textfield.frame.origin.y, self.textfield.frame.size.width - 45, kSearchBarHeight - 16);
+            self.textfieldBackgroundView.frame = CGRectMake(self.textfieldBackgroundView.frame.origin.x, self.textfieldBackgroundView.frame.origin.y, self.textfieldBackgroundView.frame.size.width - 45, self.textfieldBackgroundView.frame.size.height);
             self.cancelButton.alpha = 1;
             [UIView commitAnimations];
             
@@ -161,8 +161,8 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
         }
     } else {
         if (showCancelButton && !self.isCancelButtonShow) {
-            self.textfield.frame = CGRectMake(self.textfield.frame.origin.x, self.textfield.frame.origin.y, self.textfield.frame.size.width - 50, kSearchBarHeight - 16);
-            self.textfieldBackgroundView.frame = CGRectMake(self.textfieldBackgroundView.frame.origin.x, self.textfieldBackgroundView.frame.origin.y, self.textfieldBackgroundView.frame.size.width - 35, self.textfieldBackgroundView.frame.size.height);
+            self.textfield.frame = CGRectMake(self.textfield.frame.origin.x, self.textfield.frame.origin.y, self.textfield.frame.size.width - 45, kSearchBarHeight - 16);
+            self.textfieldBackgroundView.frame = CGRectMake(self.textfieldBackgroundView.frame.origin.x, self.textfieldBackgroundView.frame.origin.y, self.textfieldBackgroundView.frame.size.width - 45, self.textfieldBackgroundView.frame.size.height);
             self.cancelButton.alpha = 1;
             
             self.isCancelButtonShow = YES;
@@ -221,6 +221,7 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     _cancelButton.alpha = 0;
     _cancelButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
     [_cancelButton setTitleColor:kCyanTextColor forState:UIControlStateNormal];
+    [_cancelButton setTitleColor:[UIColor colorWithRed:0 / 255.0f green:187 / 255.0f blue:166 / 255.0f alpha:0.6] forState:UIControlStateHighlighted];
     [_cancelButton addTarget:self
                       action:@selector(didCancelButtonClicked:)
             forControlEvents:UIControlEventTouchUpInside];
