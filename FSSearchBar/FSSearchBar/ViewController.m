@@ -29,13 +29,13 @@
 }
 
 - (BOOL)FSSearchBarShouldBeginEditing:(FSSearchBar *)searchBar {
-    [searchBar setCancelButtonShow:YES animated:YES];
+    [searchBar setShowCancelButton:YES animated:YES];
     
     return YES;
 }
 
 - (BOOL)FSSearchBarShouldEndEditing:(FSSearchBar *)searchBar {
-    [searchBar setCancelButtonShow:NO animated:YES];
+    [searchBar setShowCancelButton:NO animated:YES];
     
     return YES;
 }

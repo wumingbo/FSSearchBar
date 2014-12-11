@@ -23,7 +23,7 @@
 @property (strong, nonatomic) NSString *text;
 
 /**
- *  The UITextField's placeholder. Deafault is "搜索".
+ *  The UITextField's placeholder. Deafault is "Search".
  */
 @property (strong, nonatomic) NSString *placeholder;
 
@@ -43,7 +43,7 @@
 @property (strong, nonatomic) UIColor *tintColor;
 
 /**
- *  The title of cancel button. Deafault is "取消".
+ *  The title of cancel button. Deafault is "Cancel".
  */
 @property (strong, nonatomic) NSString *cancelButtonTitle;
 
@@ -55,7 +55,7 @@
 /**
  *  The searchBar's cancel button showing state. Default is NO.
  */
-@property (assign, nonatomic, readonly) BOOL isCancelButtonShow;
+@property (assign, nonatomic, readonly) BOOL showCancelButton;
 
 /**
  *  Return a instance of FSSearchBar.
@@ -70,7 +70,7 @@
  *  @param showCancelButton The property of "isCancelButtonShow" set.
  *  @param animated         Change state by animation.If the value is YES.
  */
-- (void)setCancelButtonShow:(BOOL)showCancelButton animated:(BOOL)animated;
+- (void)setShowCancelButton:(BOOL)showCancelButton animated:(BOOL)animated;
 
 @end
 

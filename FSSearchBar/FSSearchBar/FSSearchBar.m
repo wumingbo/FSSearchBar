@@ -29,7 +29,7 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 
 @interface FSSearchBar () <UITextFieldDelegate>
 
-@property (assign, nonatomic) BOOL isCancelButtonShow;
+@property (assign, nonatomic) BOOL showCancelButton;
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIView *textfieldBackgroundView;
 @property (strong, nonatomic) UIButton *cancelButton;
@@ -139,17 +139,17 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     [self.cancelButton setTitle:cancelButtonTitle forState:UIControlStateNormal];
 }
 
-- (void)setCancelButtonShow:(BOOL)showCancelButton animated:(BOOL)animated {
+- (void)setShowCancelButton:(BOOL)showCancelButton animated:(BOOL)animated {
     if (animated) {
-        if (showCancelButton && !self.isCancelButtonShow) {
+        if (showCancelButton && !self.showCancelButton) {
             [UIView beginAnimations:@"ShowCancelButton" context:nil];
             self.textfield.frame = CGRectMake(self.textfield.frame.origin.x, self.textfield.frame.origin.y, self.textfield.frame.size.width - 45, kSearchBarHeight - 16);
             self.textfieldBackgroundView.frame = CGRectMake(self.textfieldBackgroundView.frame.origin.x, self.textfieldBackgroundView.frame.origin.y, self.textfieldBackgroundView.frame.size.width - 45, self.textfieldBackgroundView.frame.size.height);
             self.cancelButton.alpha = 1;
             [UIView commitAnimations];
             
-            self.isCancelButtonShow = YES;
-        } else if (!showCancelButton && self.isCancelButtonShow){
+            self.showCancelButton = YES;
+        } else if (!showCancelButton && self.showCancelButton){
             [UIView beginAnimations:@"HideCancelButton" context:nil];
             self.cancelButton.alpha = 0;
             self.textfieldBackgroundView.frame = kTextfieldBackgroundFrame;
@@ -157,22 +157,22 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
             self.textfield.center = self.textfieldBackgroundView.center;
             [UIView commitAnimations];
             
-            self.isCancelButtonShow = NO;
+            self.showCancelButton = NO;
         }
     } else {
-        if (showCancelButton && !self.isCancelButtonShow) {
+        if (showCancelButton && !self.showCancelButton) {
             self.textfield.frame = CGRectMake(self.textfield.frame.origin.x, self.textfield.frame.origin.y, self.textfield.frame.size.width - 45, kSearchBarHeight - 16);
             self.textfieldBackgroundView.frame = CGRectMake(self.textfieldBackgroundView.frame.origin.x, self.textfieldBackgroundView.frame.origin.y, self.textfieldBackgroundView.frame.size.width - 45, self.textfieldBackgroundView.frame.size.height);
             self.cancelButton.alpha = 1;
             
-            self.isCancelButtonShow = YES;
-        } else if (!showCancelButton && self.isCancelButtonShow) {
+            self.showCancelButton = YES;
+        } else if (!showCancelButton && self.showCancelButton) {
             self.textfieldBackgroundView.frame = kTextfieldBackgroundFrame;
             self.textfield.frame = kTextfieldFrame;
             self.textfield.center = self.textfieldBackgroundView.center;
             self.cancelButton.alpha = 0;
             
-            self.isCancelButtonShow = NO;
+            self.showCancelButton = NO;
         }
     }
 }
@@ -193,7 +193,7 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 
 - (void)setupUI {
     self.backgroundColor = kContentViewColor;
-    _isCancelButtonShow = NO;
+    _showCancelButton = NO;
     
     _contentView = [[UIView alloc] init];
     _contentView.backgroundColor = [UIColor clearColor];
@@ -221,7 +221,7 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     _cancelButton.alpha = 0;
     _cancelButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
     [_cancelButton setTitleColor:kCyanTextColor forState:UIControlStateNormal];
-    [_cancelButton setTitleColor:[UIColor colorWithRed:0 / 255.0f green:187 / 255.0f blue:166 / 255.0f alpha:0.6] forState:UIControlStateHighlighted];
+    [_cancelButton setTitleColor:[kCyanTextColor colorWithAlphaComponent:.6] forState:UIControlStateHighlighted];
     [_cancelButton addTarget:self
                       action:@selector(didCancelButtonClicked:)
             forControlEvents:UIControlEventTouchUpInside];
@@ -251,13 +251,13 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 
 - (void)setupProperty {
     _text = _textfield.text = @"";
-    _placeholder = self.textfield.placeholder = @"搜索";
+    _placeholder = self.textfield.placeholder = @"Search";
     _tintColor = self.textfield.tintColor = kCyanTextColor;
     _searchIcon = [UIImage imageNamed:@"icon_location_search"];
     _iconView = [[UIImageView alloc] initWithImage:_searchIcon];
-    _cancelButtonTitle = @"取消";
+    _cancelButtonTitle = @"Cancel";
     
-    [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     
     [self.textfield setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:_placeholder attributes:@{NSForegroundColorAttributeName: kLightGrayTextColor, NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Light" size:14]}]];
     
@@ -289,6 +289,8 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 
 - (void)didCancelButtonClicked:(UIButton *)cancelButton {
     
+    self.text = @"";
+    
     if ([self.delegate respondsToSelector:@selector(FSSearchBarCancelButtonClicked:)]) {
         [self.delegate FSSearchBarCancelButtonClicked:self];
         
@@ -308,14 +310,14 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
     return 0;
 }
 
-- (void)textFieldForEditing {
+- (void)changeTextFieldForEditing {
     [UIView beginAnimations:@"ToEdit" context:nil];
     self.textfield.frame = kTextfieldFrame;
     [UIView commitAnimations];
     self.textfield.frame = CGRectMake(20, 8, kTextfieldMaxWidth, kSearchBarHeight - 16);
 }
 
-- (void)textFieldForNormal {
+- (void)changeTextFieldForNormal {
     self.textfield.frame = kTextfieldFrame;
     
     [UIView beginAnimations:@"ToNormal" context:nil];
@@ -327,16 +329,16 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     
-    [self textFieldForEditing];
+    [self changeTextFieldForEditing];
     
     if ([self.delegate respondsToSelector:@selector(FSSearchBarShouldBeginEditing:)]) {
         if ([self.delegate FSSearchBarShouldBeginEditing:self]) {
-            [self textFieldForEditing];
+            [self changeTextFieldForEditing];
         }
         return [self.delegate FSSearchBarShouldBeginEditing:self];
     }
     
-    [self textFieldForEditing];
+    [self changeTextFieldForEditing];
     
     return YES;
 }
@@ -344,7 +346,7 @@ static CGFloat const kSearchBarTextfieldCornerRadius = 5.0;
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     
     if (textField.text.length == 0) {
-        [self textFieldForNormal];
+        [self changeTextFieldForNormal];
     }
     
     textField.clearButtonMode = textField.text.length == 0 ? UITextFieldViewModeWhileEditing : UITextFieldViewModeAlways;
